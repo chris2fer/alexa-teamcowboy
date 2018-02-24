@@ -1,0 +1,4 @@
+flask
+flask-ask
+requests
+git+https://github.com/chris2fer/TeamCowPy.git
