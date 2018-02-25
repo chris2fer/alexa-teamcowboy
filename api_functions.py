@@ -23,9 +23,7 @@ if __name__ == '__main__':
         "private": os.getenv('tc_api_private')
     }
 
-    tc = teamcowpy.Auth(keys=API_KEYS)
-    token = tc.get_user_token(data={"username": os.getenv('tc_username'), "password": os.getenv('tc_password')})
+    tc = teamcowpy.User(keys=API_KEYS, u=os.getenv('tc_username'), p=os.getenv('tc_password'))
 
-    user = teamcowpy.User(keys=API_KEYS)
-    test_multiple_teams(user=user, token=token)
+    print(tc.getTeamEvents())
 
