@@ -2,7 +2,6 @@
 import os
 import logging
 
-#from flask import Flask , render_template
 import alexa
 from teamcowpy import teamcowpy
 import yaml
@@ -10,14 +9,6 @@ import yaml
 
 with open('templates.yaml', 'r') as f:
     templates = yaml.load(f)
-
-##############################
-# Setup Flask
-##############################
-#app = Flask(__name__)
-#ask = Ask(app, "/")
-logging.getLogger('flask_ask').setLevel(logging.DEBUG)
-
 
 
 def lambda_handler(event, context):
@@ -82,9 +73,10 @@ def intent_router(event, context):
             return getNextGame(event, context)
 
     if intent == "AMAZON.NoIntent":
-        last = str(event["session"]['attributes']['lastIntent'])
-        if last == "nextGame":
-            return cancel_intent()
+        if 'lastIntent' in event["session"]['attributes'].keys():
+            last = str(event["session"]['attributes']['lastIntent'])
+            if last == "nextGame":
+                return cancel_intent()
 
 ##############################
 # Required Intents
@@ -96,7 +88,9 @@ def cancel_intent():
     reprompt = None
     endSession = True
     return alexa.build_response({},
-                                alexa.build_speechlet_response("Bye", alexa.build_speech_output(say), reprompt,
+                                alexa.build_speechlet_response("Bye",
+                                                               alexa.build_speech_output(say),
+                                                               reprompt,
                                                                endSession))
 
 
@@ -132,11 +126,11 @@ def getNextGame(event, context):
     games = [{'team': e['team']['name'],
               'date': e['dateTimeInfo']['startDateTimeLocalDisplay'],
               'opponent': e['title'],
-              'location': e['location']['name']} for e in evts]
+              'location': e['location']['name']} for e in evts if not e['dateTimeInfo']['inPast']]
 
     game = games[i]
     if game['team'] == "Vipers Hockey Club":
-        game['team'] = "Vipers Four"
+        game['team'] = "Vipers Five"
 
     say = templates['nextGame'].format(location=game['location'],
                                        opponent=game['opponent'],
@@ -154,7 +148,7 @@ def getNextGame(event, context):
 
     return alexa.build_response({'nextGameIteration': i, 'lastIntent': 'nextGame'},
                                 alexa.build_speechlet_response("NextGame",
-                                                               alexa.build_speech_output(say),
+                                                               alexa.build_speech_output(say, True),
                                                                reprompt,
                                                                endSession))
 
@@ -167,4 +161,5 @@ def getNextGame(event, context):
 # @ask.intent('RestaurantByCityIntent')
 # def get_restuarant_by_city(USCitySlot):
 #     return search (USCitySlot)
-
+if __name__ == '__main__':
+    print(alexa.build_speech_output("hello", True))

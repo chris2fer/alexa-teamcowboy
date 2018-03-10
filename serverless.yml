@@ -1,5 +1,4 @@
-# Welcome to Serverless!
-#
+
 # Happy Coding!
 
 service: alexa-vipers
@@ -7,7 +6,6 @@ service: alexa-vipers
 plugins:
   - serverless-python-requirements
 
-# frameworkVersion: "=X.X.X"
 custom:
   stage: ${opt:stage, self:provider.stage}
   pythonRequirements:
@@ -16,12 +14,10 @@ custom:
 provider:
   name: aws
   runtime: python2.7
-# you can overwrite defaults here
+  timeout: 30
   stage: dev
   region: us-east-1
 
-
-# you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
 #    - Effect: "Allow"
 #      Action:
@@ -37,14 +33,12 @@ provider:
 #            - "Ref" : "ServerlessDeploymentBucket"
 #            - "/*"
 
-# you can define service wide environment variables here
   environment:
     tc_api_private: ${file(env.yml):${self:custom.stage}.tc_api_private}
     tc_api_public: ${file(env.yml):${self:custom.stage}.tc_api_public}
     tc_password: ${file(env.yml):${self:custom.stage}.tc_password}
     tc_username: ${file(env.yml):${self:custom.stage}.tc_username}
 
-# you can add packaging information here
 #package:
 #  include:
 #    - include-me.py
@@ -53,28 +47,25 @@ provider:
 #    - exclude-me.py
 #    - exclude-me-dir/**
 
-    
 functions:
   alexaVipers:
+    description: Main logic of the Alexa Skill
+    reservedConcurrency: 5
     handler: lambda_handler.lambda_handler
 
     events:
       - alexaSkill:
         appId: amzn1.ask.skill.79f8727f-d85f-4783-a3bc-39305f97c456
 
-#    environment:
-#      variable2: value2
-
-# you can add CloudFormation resource templates here
 #resources:
 #  Resources:
 #    NewResource:
 #      Type: AWS::S3::Bucket
 #      Properties:
 #        BucketName: my-new-bucket
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
+  # Outputs:
+  #    NewOutput:
+  #      Description: "Description for the output"
+  #      Value: "Some output value"
 
 

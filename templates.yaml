@@ -1,5 +1,5 @@
 chris: "This is a value {0} and this is another value {1}"
-nextGame: "{team} has a game at {location} on {day} against {opponent}.  Do you want to hear the next?"
+nextGame: "<speak>{team} has a game at {location} on {day} against {opponent}.  Do you want to hear the next?</speak>"
 nextGameReprompt: "Would you like to hear the next game?"
 cancel: "OK.  Remmber to RSVP for your games and keep the slapper greasy for some sweet geenos."
 nextGameDone: "Hopefully you can make a game or two and kick butt. Check out team cowboy for more info. Take care."
